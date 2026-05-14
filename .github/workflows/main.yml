@@ -1,0 +1,33 @@
+name: Pipeline DevSecOps Autoral - Grupo 7
+on: [push, pull_request]
+
+jobs:
+  security-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Necessário para o Gitleaks analisar o histórico
+
+      # 1. Varredura de Segredos (Gitleaks)
+      - name: Detecção de Segredos
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # No seu trabalho, você diz que segredos bloqueiam o merge [cite: 151, 159]
+
+      # 2. Análise Estática (Semgrep)
+      - name: Análise SAST
+        run: |
+          python3 -m pip install semgrep
+          semgrep --config auto --error
+
+      # 3. Análise de Dependências (Trivy)
+      - name: Scanner de Vulnerabilidades (SCA)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'table'
+          [cite_start]exit-code: '1' # Bloqueia o build se encontrar falhas críticas 
+          severity: 'CRITICAL,HIGH'

@@ -30,4 +30,4 @@ jobs:
           scan-type: 'fs'
           format: 'table'
           [cite_start]exit-code: '1' # Bloqueia o build se encontrar falhas críticas 
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL,HIGH' 

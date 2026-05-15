@@ -10,19 +10,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 1. Varredura de Segredos (Gitleaks)
+      # 1.(Gitleaks)
       - name: Detecção de Segredos
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Análise Estática (Semgrep)
+      # 2.(Semgrep)
       - name: Análise SAST
         run: |
           python3 -m pip install semgrep
           semgrep --config auto --error
 
-      # 3. Análise de Dependências (Trivy)
+      # 3.(Trivy)
       - name: Scanner de Vulnerabilidades (SCA)
         uses: aquasecurity/trivy-action@master
         with:
